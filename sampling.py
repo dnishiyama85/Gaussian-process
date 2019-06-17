@@ -17,6 +17,12 @@ def gauss_kernel(xis, xjs, theta1=1.0, theta2=1.0):
     return np.exp(-theta1 * diff ** 2 / theta2)
 
 
+def gauss_kernel_with_error(xis, xjs, theta1=1.0, theta2=1.0, theta3=0.4):
+    gauss = gauss_kernel(xis, xjs, theta1=theta1, theta2=theta2)
+    delta = theta3 * np.eye(len(xis))
+    return gauss + delta
+
+
 def exp_kernel(xis, xjs, theta1=1.0, theta2=1.0):
     diff = _make_diff(xis, xjs)
     return np.exp(-theta1 * np.abs(diff) / theta2)

@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sampling import sample, gauss_kernel
+from sampling import sample, gauss_kernel, gauss_kernel_with_error
 
 
 def get_train_data(size=10, start=-5, stop=5):
@@ -11,10 +11,13 @@ def get_train_data(size=10, start=-5, stop=5):
 
 
 # 予測分布はガウス分布になるので、その平均と分散を返す
-def predict_distribution(xs, train_xs, train_ys, theta1=1.0, theta2=1.0):
+def predict_distribution(xs, train_xs, train_ys,
+                         theta1=1.0, theta2=1.0, theta3=0.05):
     k_ = gauss_kernel(train_xs, xs)
-    k__ = gauss_kernel(xs, xs)
-    K = gauss_kernel(train_xs, train_xs, theta1=theta1, theta2=theta2)
+    k__ = gauss_kernel_with_error(xs, xs,
+                                  theta1=theta1, theta2=theta2, theta3=theta3)
+    K = gauss_kernel_with_error(train_xs, train_xs,
+                                theta1=theta1, theta2=theta2, theta3=theta3)
     K_inv = np.linalg.inv(K)
     means = k_.T.dot(K_inv.dot(train_ys))
     vars = k__ - k_.T.dot(K_inv).dot(k_)
