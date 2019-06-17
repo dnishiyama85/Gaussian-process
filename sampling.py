@@ -6,9 +6,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def _make_diff(xis, xjs):
     return np.array([(xi - xj) for xi in xis for xj in xjs]).reshape(len(xis),
                                                                      len(xjs))
+
 
 def gauss_kernel(xis, xjs, theta1=1.0, theta2=1.0):
     diff = _make_diff(xis, xjs)
@@ -25,8 +27,13 @@ def periodic_kernel(xis, xjs, theta1=1.0, theta2=1.0):
     return np.exp(theta1 * np.cos(diff) / theta2)
 
 
-def sample(kernel, theta1=1.0, theta2=1.0, n=100, num_sample=3):
-    xs = np.linspace(-5, 5, n)
+def sample(kernel, start=-5, stop=5, n=100, num_sample=3, random_x=False):
+    if random_x:
+        scale = stop - start
+        xs = np.random.random(n)
+        xs = xs * scale + start
+    else:
+        xs = np.linspace(-5, 5, n)
     mu = np.zeros_like(xs)
     k = kernel(xs, xs)
     return xs, np.random.multivariate_normal(mu, k, num_sample)
